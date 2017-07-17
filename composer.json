@@ -1,0 +1,48 @@
+{
+    "name": "faustbrian/http",
+    "description": "A developer-experience focused HTTP client, optimized for most common use cases.",
+    "keywords": [
+        "http",
+        "guzzle",
+        "Brian Faust",
+        "faustbrian"
+    ],
+    "license": "MIT",
+    "authors": [{
+        "name": "Brian Faust",
+        "email": "hello@brianfaust.de",
+        "homepage": "https://brianfaust.de"
+    }],
+    "require": {
+        "php": "^7.0",
+        "guzzlehttp/guzzle": "^6.2",
+        "illuminate/support": "5.4.* || 5.5.*",
+        "tightenco/collect": "^5.4"
+    },
+    "require-dev": {
+        "coderabbi/phpumoji": "^0.7.0@beta",
+        "laravel/lumen-framework": "5.4.*",
+        "phpunit/phpunit": "^6.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "BrianFaust\\Http\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BrianFaust\\Tests\\Http\\": "tests"
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
