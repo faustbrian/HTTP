@@ -331,6 +331,12 @@ class PendingHttpRequest
      */
     public function buildHandlerStack(): HandlerStack
     {
+        static $handler;
+
+        if (!$handler) {
+            $handler = \GuzzleHttp\choose_handler();
+        }
+
         return tap(HandlerStack::create(), function ($stack) {
             $stack->push($this->buildBeforeSendingHandler());
         });
