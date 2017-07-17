@@ -1,12 +1,7 @@
 {
     "name": "faustbrian/http",
     "description": "A developer-experience focused HTTP client, optimized for most common use cases.",
-    "keywords": [
-        "http",
-        "guzzle",
-        "Brian Faust",
-        "faustbrian"
-    ],
+    "keywords": ["http", "guzzle", "curl"],
     "license": "MIT",
     "authors": [{
         "name": "Brian Faust",
