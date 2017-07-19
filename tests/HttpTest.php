@@ -19,22 +19,16 @@ class HttpTest extends TestCase
 {
     public static function setUpBeforeClass()
     {
-
         HttpServer::start();
     }
 
-    function url($url)
+    public function url($url)
     {
         return vsprintf('%s/%s', [
-            'http://localhost:' . getenv('TEST_SERVER_PORT'),
+            'http://localhost:'.getenv('TEST_SERVER_PORT'),
             ltrim($url, '/'),
         ]);
     }
-
-    // public function url($url)
-    // {
-    //     return sprintf('http://httpbin.org/%s', ltrim($url, '/'));
-    // }
 
     /** @test */
     public function query_parameters_can_be_passed_as_an_array()
@@ -178,7 +172,7 @@ class HttpTest extends TestCase
     {
         $response = Http::withHeaders(['HTTP-Status' => 418])->get($this->url('/get'));
 
-        $this->assertEquals(418, $response->status());
+        $this->assertSame(418, $response->status());
     }
 
     /** @test */
@@ -186,7 +180,7 @@ class HttpTest extends TestCase
     {
         $response = Http::withHeaders(['HTTP-Status' => 508])->get($this->url('/get'));
 
-        $this->assertEquals(508, $response->status());
+        $this->assertSame(508, $response->status());
     }
 
     /** @test */
@@ -194,7 +188,7 @@ class HttpTest extends TestCase
     {
         $response = Http::get($this->url('/redirect'));
 
-        $this->assertEquals(200, $response->status());
+        $this->assertSame(200, $response->status());
     }
 
     /** @test */
@@ -202,8 +196,8 @@ class HttpTest extends TestCase
     {
         $response = Http::withoutRedirecting()->get($this->url('/redirect'));
 
-        $this->assertEquals(302, $response->status());
-        $this->assertEquals($this->url('/redirected'), $response->header('Location'));
+        $this->assertSame(302, $response->status());
+        $this->assertSame($this->url('/redirected'), $response->header('Location'));
     }
 
     /** @test */
@@ -335,7 +329,7 @@ class HttpTest extends TestCase
     {
         $response = Http::get($this->url('/raw'));
 
-        $this->assertEquals("A simple string response", $response->body());
+        $this->assertSame('A simple string response', $response->body());
     }
 
     /** @test */
@@ -438,16 +432,16 @@ class HttpTest extends TestCase
 
 class HttpServer
 {
-    static function start()
+    public static function start()
     {
-        $pid = exec('php -S ' . 'localhost:' . getenv('TEST_SERVER_PORT') . ' -t ./tests/server/public > /dev/null 2>&1 & echo $!');
+        $pid = exec('php -S '.'localhost:'.getenv('TEST_SERVER_PORT').' -t ./tests/server/public > /dev/null 2>&1 & echo $!');
 
-        while (@file_get_contents('http://localhost:' . getenv('TEST_SERVER_PORT') . '/get') === false) {
+        while (@file_get_contents('http://localhost:'.getenv('TEST_SERVER_PORT').'/get') === false) {
             usleep(1000);
         }
 
         register_shutdown_function(function () use ($pid) {
-            exec('kill ' . $pid);
+            exec('kill '.$pid);
         });
     }
 }

@@ -9,9 +9,9 @@ $app = new Laravel\Lumen\Application(
 function build_response($request)
 {
     return response()->json([
-        'headers' => $request->header(),
-        'query' => $request->query(),
-        'json' => $request->json()->all(),
+        'headers'     => $request->header(),
+        'query'       => $request->query(),
+        'json'        => $request->json()->all(),
         'form_params' => $request->request->all(),
     ], $request->header('HTTP-Status', 200));
 }
@@ -41,11 +41,11 @@ $app->get('/redirect', function () {
 });
 
 $app->get('/redirected', function () {
-    return "Redirected!";
+    return 'Redirected!';
 });
 
 $app->get('/raw', function () {
-    return "A simple string response";
+    return 'A simple string response';
 });
 
 $app->get('/xml', function () {
