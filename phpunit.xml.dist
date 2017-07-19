@@ -27,4 +27,7 @@
             <directory suffix=".php">src/</directory>
         </whitelist>
     </filter>
+    <php>
+        <env name="TEST_SERVER_PORT" value="1234"/>
+    </php>
 </phpunit>

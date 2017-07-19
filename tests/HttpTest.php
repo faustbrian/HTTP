@@ -17,10 +17,24 @@ use PHPUnit\Framework\TestCase;
  */
 class HttpTest extends TestCase
 {
-    public function url($url)
+    public static function setUpBeforeClass()
     {
-        return sprintf('http://httpbin.org/%s', ltrim($url, '/'));
+
+        HttpServer::start();
     }
+
+    function url($url)
+    {
+        return vsprintf('%s/%s', [
+            'http://localhost:' . getenv('TEST_SERVER_PORT'),
+            ltrim($url, '/'),
+        ]);
+    }
+
+    // public function url($url)
+    // {
+    //     return sprintf('http://httpbin.org/%s', ltrim($url, '/'));
+    // }
 
     /** @test */
     public function query_parameters_can_be_passed_as_an_array()
@@ -31,7 +45,7 @@ class HttpTest extends TestCase
         ]);
 
         $this->assertArraySubset([
-            'args' => [
+            'query' => [
                 'foo' => 'bar',
                 'baz' => 'qux',
             ],
@@ -44,7 +58,7 @@ class HttpTest extends TestCase
         $response = Http::get($this->url('/get?foo=bar&baz=qux'));
 
         $this->assertArraySubset([
-            'args' => [
+            'query' => [
                 'foo' => 'bar',
                 'baz' => 'qux',
             ],
@@ -59,7 +73,7 @@ class HttpTest extends TestCase
         ]);
 
         $this->assertArraySubset([
-            'args' => [
+            'query' => [
                 'foo' => 'bar',
                 'baz' => 'qux',
             ],
@@ -76,7 +90,7 @@ class HttpTest extends TestCase
 
         $this->assertArraySubset([
             'headers' => [
-                'Content-Type' => 'application/json',
+                'content-type' => ['application/json'],
             ],
             'json' => [
                 'foo' => 'bar',
@@ -95,9 +109,9 @@ class HttpTest extends TestCase
 
         $this->assertArraySubset([
             'headers' => [
-                'Content-Type' => 'application/x-www-form-urlencoded',
+                'content-type' => ['application/x-www-form-urlencoded'],
             ],
-            'form' => [
+            'form_params' => [
                 'foo' => 'bar',
                 'baz' => 'qux',
             ],
@@ -114,7 +128,7 @@ class HttpTest extends TestCase
 
         $this->assertArraySubset([
             'headers' => [
-                'Content-Type' => 'application/json',
+                'content-type' => ['application/json'],
             ],
             'json' => [
                 'foo' => 'bar',
@@ -130,7 +144,7 @@ class HttpTest extends TestCase
 
         $this->assertArraySubset([
             'headers' => [
-                'Custom' => 'Header',
+                'custom' => ['Header'],
             ],
         ], $response->json());
     }
@@ -142,7 +156,7 @@ class HttpTest extends TestCase
 
         $this->assertArraySubset([
             'headers' => [
-                'Custom' => 'Header',
+                'custom' => ['Header'],
             ],
         ], $response->json());
     }
@@ -154,7 +168,7 @@ class HttpTest extends TestCase
 
         $this->assertArraySubset([
             'headers' => [
-                'Accept' => 'banana/sandwich',
+                'accept' => ['banana/sandwich'],
             ],
         ], $response->json());
     }
@@ -162,34 +176,34 @@ class HttpTest extends TestCase
     /** @test */
     public function exceptions_are_not_thrown_for_40x_responses()
     {
-        $response = Http::get($this->url('/status/418'));
+        $response = Http::withHeaders(['HTTP-Status' => 418])->get($this->url('/get'));
 
-        $this->assertSame(418, $response->status());
+        $this->assertEquals(418, $response->status());
     }
 
     /** @test */
     public function exceptions_are_not_thrown_for_50x_responses()
     {
-        $response = Http::get($this->url('/status/508'));
+        $response = Http::withHeaders(['HTTP-Status' => 508])->get($this->url('/get'));
 
-        $this->assertSame(508, $response->status());
+        $this->assertEquals(508, $response->status());
     }
 
     /** @test */
     public function redirects_are_followed_by_default()
     {
-        $response = Http::get($this->url('/redirect/1'));
+        $response = Http::get($this->url('/redirect'));
 
-        $this->assertSame(200, $response->status());
+        $this->assertEquals(200, $response->status());
     }
 
     /** @test */
     public function redirects_can_be_disabled()
     {
-        $response = Http::withoutRedirecting()->get($this->url('/redirect/1'));
+        $response = Http::withoutRedirecting()->get($this->url('/redirect'));
 
-        $this->assertSame(302, $response->status());
-        $this->assertSame('/get', $response->header('Location'));
+        $this->assertEquals(302, $response->status());
+        $this->assertEquals($this->url('/redirected'), $response->header('Location'));
     }
 
     /** @test */
@@ -249,7 +263,7 @@ class HttpTest extends TestCase
         ]);
 
         $this->assertArraySubset([
-            'args' => [
+            'query' => [
                 'banana' => 'sandwich',
             ],
             'json' => [
@@ -268,7 +282,7 @@ class HttpTest extends TestCase
         ]);
 
         $this->assertArraySubset([
-            'args' => [
+            'query' => [
                 'banana' => 'sandwich',
             ],
             'json' => [
@@ -287,7 +301,7 @@ class HttpTest extends TestCase
         ]);
 
         $this->assertArraySubset([
-            'args' => [
+            'query' => [
                 'banana' => 'sandwich',
             ],
             'json' => [
@@ -306,7 +320,7 @@ class HttpTest extends TestCase
         ]);
 
         $this->assertArraySubset([
-            'args' => [
+            'query' => [
                 'banana' => 'sandwich',
             ],
             'json' => [
@@ -319,9 +333,9 @@ class HttpTest extends TestCase
     /** @test */
     public function can_retrieve_the_raw_response_body()
     {
-        $response = Http::get($this->url('/links/1/0'));
+        $response = Http::get($this->url('/raw'));
 
-        $this->assertSame('<html><head><title>Links</title></head><body>0 </body></html>', $response->body());
+        $this->assertEquals("A simple string response", $response->body());
     }
 
     /** @test */
@@ -355,7 +369,7 @@ class HttpTest extends TestCase
     /** @test */
     public function can_check_if_a_response_is_redirect()
     {
-        $response = Http::withoutRedirecting()->get($this->url('/status/302'));
+        $response = Http::withHeaders(['HTTP-Status' => 302])->get($this->url('/get'));
 
         $this->assertTrue($response->isRedirect());
         $this->assertFalse($response->isSuccess());
@@ -366,7 +380,7 @@ class HttpTest extends TestCase
     /** @test */
     public function can_check_if_a_response_is_client_error()
     {
-        $response = Http::get($this->url('/status/404'));
+        $response = Http::withHeaders(['HTTP-Status' => 404])->get($this->url('/get'));
 
         $this->assertTrue($response->isClientError());
         $this->assertFalse($response->isSuccess());
@@ -377,7 +391,7 @@ class HttpTest extends TestCase
     /** @test */
     public function can_check_if_a_response_is_server_error()
     {
-        $response = Http::get($this->url('/status/500'));
+        $response = Http::withHeaders(['HTTP-Status' => 500])->get($this->url('/get'));
 
         $this->assertTrue($response->isServerError());
         $this->assertFalse($response->isSuccess());
@@ -388,7 +402,7 @@ class HttpTest extends TestCase
     /** @test */
     public function is_ok_is_an_alias_for_is_success()
     {
-        $response = Http::get($this->url('/status/200'));
+        $response = Http::withHeaders(['HTTP-Status' => 200])->get($this->url('/get'));
 
         $this->assertTrue($response->isOk());
         $this->assertTrue($response->isSuccess());
@@ -419,5 +433,21 @@ class HttpTest extends TestCase
         $this->assertArrayHasKey('User-Agent', $state['headers']);
         $this->assertSame(200, (int) $state['headers']['Http-Status']);
         $this->assertSame(json_encode(['foo' => 'bar']), $state['body']);
+    }
+}
+
+class HttpServer
+{
+    static function start()
+    {
+        $pid = exec('php -S ' . 'localhost:' . getenv('TEST_SERVER_PORT') . ' -t ./tests/server/public > /dev/null 2>&1 & echo $!');
+
+        while (@file_get_contents('http://localhost:' . getenv('TEST_SERVER_PORT') . '/get') === false) {
+            usleep(1000);
+        }
+
+        register_shutdown_function(function () use ($pid) {
+            exec('kill ' . $pid);
+        });
     }
 }
