@@ -40,6 +40,13 @@ class PendingHttpRequest
     private $options = ['http_errors' => false];
 
     /**
+     * The Guzzle HandlerStack.
+     *
+     * @var \GuzzleHttp\HandlerStack
+     */
+    private $handler;
+
+    /**
      * Create a new PendingHttpRequest instance.
      */
     public function __construct()
@@ -210,6 +217,18 @@ class PendingHttpRequest
     }
 
     /**
+     * Handle requests with the given class.
+     *
+     * @return \BrianFaust\Http\PendingHttpRequest
+     */
+    public function withHandler($handler): PendingHttpRequest
+    {
+        return tap($this, function ($request) use($handler) {
+            return $this->handler = $handler;
+        });
+    }
+
+    /**
      * Set the pre-request Callback.
      *
      * @param \Closure $callback
@@ -334,10 +353,14 @@ class PendingHttpRequest
         static $handler;
 
         if (!$handler) {
-            $handler = \GuzzleHttp\choose_handler();
+            $handler = $this->handler ?? \GuzzleHttp\choose_handler();
         }
 
-        return tap(HandlerStack::create(), function ($stack) {
+        if ($handler instanceof HandlerStack) {
+            $stack = $handler;
+        }
+
+        return tap($stack ?? HandlerStack::create(), function ($stack) {
             $stack->push($this->buildBeforeSendingHandler());
         });
     }
