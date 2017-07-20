@@ -49,7 +49,19 @@ $app->get('/raw', function () {
 });
 
 $app->get('/xml', function () {
-    return "<?xml version='1.0' encoding='UTF-8'?><zttp><author>Adam Wathan</author></zttp>";
+    return "<?xml version='1.0' encoding='UTF-8'?><http><name>John</name></http>";
+});
+
+$app->get('/auth/basic', function () use ($app) {
+    $request = $app['request'];
+
+    $headers = [
+        (bool) preg_match('/Basic\s[a-zA-Z0-9]+/', $request->header('Authorization')),
+        $request->header('php-auth-user') === 'username',
+        $request->header('php-auth-pw') === 'password',
+    ];
+
+    return (count(array_unique($headers)) === 1) ? response(null, 200) : response(null, 401);
 });
 
 $app->run();

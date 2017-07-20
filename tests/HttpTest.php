@@ -10,6 +10,7 @@
  */
 
 use BrianFaust\Http\Http;
+use BrianFaust\Http\HttpResponse;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -427,6 +428,37 @@ class HttpTest extends TestCase
         $this->assertArrayHasKey('User-Agent', $state['headers']);
         $this->assertSame(200, (int) $state['headers']['Http-Status']);
         $this->assertSame(json_encode(['foo' => 'bar']), $state['body']);
+    }
+
+    /** @test */
+    public function response_can_use_macros()
+    {
+        HttpResponse::macro('testMacro', function () {
+            return $this->json();
+        });
+
+        $response = Http::post($this->url('/post'), [
+            'foo' => 'bar',
+            'baz' => 'qux',
+        ]);
+
+        $this->assertArraySubset([
+            'headers' => [
+                'content-type' => ['application/json'],
+            ],
+            'json' => [
+                'foo' => 'bar',
+                'baz' => 'qux',
+            ],
+        ], $response->testMacro());
+    }
+
+    /** @test */
+    public function can_use_basic_auth()
+    {
+        $response = Http::withBasicAuth('username', 'password')->get($this->url('/auth/basic'));
+
+        $this->assertTrue($response->isSuccess());
     }
 }
 

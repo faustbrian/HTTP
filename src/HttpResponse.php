@@ -12,10 +12,15 @@
 namespace BrianFaust\Http;
 
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Support\Traits\Macroable;
 use SimpleXMLElement;
 
 class HttpResponse
 {
+    use Macroable {
+        __call as macroCall;
+    }
+
     /**
      * The Guzzle Response.
      *
@@ -34,16 +39,20 @@ class HttpResponse
     }
 
     /**
-     * Dynamically handle calls into the Guzzle response.
+     * Dynamically handle calls to the class.
      *
      * @param string $method
      * @param array  $parameters
      *
      * @return mixed
      */
-    public function __call(string $method, $parameters)
+    public function __call($method, $parameters)
     {
-        return $this->response->$method(...$parameters);
+        if (static::hasMacro($method)) {
+            return $this->macroCall($method, $parameters);
+        }
+
+        return $this->response->{$method}(...$parameters);
     }
 
     /**

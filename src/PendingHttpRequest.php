@@ -219,11 +219,13 @@ class PendingHttpRequest
     /**
      * Handle requests with the given class.
      *
+     * @param mixed $handler
+     *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
     public function withHandler($handler): PendingHttpRequest
     {
-        return tap($this, function ($request) use($handler) {
+        return tap($this, function ($request) use ($handler) {
             return $this->handler = $handler;
         });
     }
