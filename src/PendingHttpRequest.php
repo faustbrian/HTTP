@@ -55,6 +55,18 @@ class PendingHttpRequest
     }
 
     /**
+     * Create a new PendingHttpRequest instance.
+     *
+     * @param mixed $args
+     *
+     * @return \BrianFaust\Http\PendingHttpRequest
+     */
+    public static function new(...$args): PendingHttpRequest
+    {
+        return new self(...$args);
+    }
+
+    /**
      * Set the request body fomrat.
      *
      * @param string $format

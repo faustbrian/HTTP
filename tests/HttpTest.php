@@ -434,7 +434,10 @@ class HttpTest extends TestCase
     public function response_can_use_macros()
     {
         HttpResponse::macro('testMacro', function () {
-            return $this->json();
+            return vsprintf('%s %s', [
+                $this->json()['json']['foo'],
+                $this->json()['json']['baz'],
+            ]);
         });
 
         $response = Http::post($this->url('/post'), [
@@ -442,15 +445,7 @@ class HttpTest extends TestCase
             'baz' => 'qux',
         ]);
 
-        $this->assertArraySubset([
-            'headers' => [
-                'content-type' => ['application/json'],
-            ],
-            'json' => [
-                'foo' => 'bar',
-                'baz' => 'qux',
-            ],
-        ], $response->testMacro());
+        $this->assertSame('bar qux', $response->testMacro());
     }
 
     /** @test */

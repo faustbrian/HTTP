@@ -23,6 +23,6 @@ class Http
      */
     public static function __callStatic($method, $parameters)
     {
-        return (new PendingHttpRequest())->$method(...$parameters);
+        return PendingHttpRequest::new()->{$method}(...$parameters);
     }
 }
