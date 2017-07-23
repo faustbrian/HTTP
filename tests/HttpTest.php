@@ -10,8 +10,8 @@
  */
 
 use BrianFaust\Http\Http;
-use BrianFaust\Http\HttpResponse;
 use PHPUnit\Framework\TestCase;
+use BrianFaust\Http\HttpResponse;
 
 /**
  * @coversNothing
