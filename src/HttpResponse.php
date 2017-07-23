@@ -11,9 +11,9 @@
 
 namespace BrianFaust\Http;
 
+use SimpleXMLElement;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Traits\Macroable;
-use SimpleXMLElement;
 
 class HttpResponse
 {
