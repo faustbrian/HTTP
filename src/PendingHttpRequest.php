@@ -135,6 +135,16 @@ class PendingHttpRequest
     }
 
     /**
+     * Send the request body as "body".
+     *
+     * @return \BrianFaust\Http\PendingHttpRequest
+     */
+    public function asBody(): PendingHttpRequest
+    {
+        return $this->bodyFormat('body');
+    }
+
+    /**
      * Set the base uri for all requests.
      *
      * @param string $uri
@@ -274,8 +284,8 @@ class PendingHttpRequest
     /**
      * Create and send an Http "POST" request.
      *
-     * @param string $url
-     * @param null|string|array  $params
+     * @param string            $url
+     * @param null|string|array $params
      *
      * @return \BrianFaust\Http\HttpResponse
      */
@@ -342,16 +352,9 @@ class PendingHttpRequest
      */
     public function send(string $method, string $url, array $options): HttpResponse
     {
-        // If the first option is a string we probably have something like an XML-RPC payload.
-        if (is_string($body = head($options))) {
-            $request = new Request($method, $url, [], $body);
-        } else {
-            $request = new Request($method, $url, $this->mergeOptions([
-                'query' => $this->parseQueryParams($url),
-            ], $options));
-        }
-
-        return new HttpResponse($this->buildClient()->send($request));
+        return new HttpResponse($this->buildClient()->request($method, $url, $this->mergeOptions([
+            'query' => $this->parseQueryParams($url),
+        ], $options)));
     }
 
     /**
@@ -373,7 +376,7 @@ class PendingHttpRequest
     {
         static $handler;
 
-        if (! $handler) {
+        if (!$handler) {
             $handler = $this->handler ?? \GuzzleHttp\choose_handler();
         }
 
