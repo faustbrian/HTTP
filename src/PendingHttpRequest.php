@@ -376,7 +376,7 @@ class PendingHttpRequest
     {
         static $handler;
 
-        if (!$handler) {
+        if (! $handler) {
             $handler = $this->handler ?? \GuzzleHttp\choose_handler();
         }
 
