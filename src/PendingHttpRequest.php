@@ -131,7 +131,7 @@ class PendingHttpRequest
      */
     public function asMultipart(): PendingHttpRequest
     {
-        return $this->bodyFormat('multipart')->contentType('multipart/form-data');
+        return $this->bodyFormat('multipart');
     }
 
     /**

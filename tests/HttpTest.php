@@ -114,6 +114,20 @@ class HttpTest extends TestCase
     }
 
     /** @test */
+    function post_content_can_be_sent_as_multipart()
+    {
+        $response = Http::asMultipart()->post($this->url('/post'), [
+            [
+                'name'     => 'foo',
+                'contents' => 'data',
+                'headers'  => ['Z-Baz' => 'bar']
+            ],
+        ]);
+
+        $this->assertTrue($response->isOk());
+    }
+
+    /** @test */
     public function post_content_can_be_sent_as_json_explicitly()
     {
         $response = Http::asJson()->post($this->url('/post'), [
