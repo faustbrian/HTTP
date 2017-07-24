@@ -275,11 +275,11 @@ class PendingHttpRequest
      * Create and send an Http "POST" request.
      *
      * @param string $url
-     * @param array  $params
+     * @param null|string|array  $params
      *
      * @return \BrianFaust\Http\HttpResponse
      */
-    public function post(string $url, array $params = []): HttpResponse
+    public function post(string $url, $params = null): HttpResponse
     {
         return $this->send('POST', $url, [
             $this->bodyFormat => $params,
@@ -340,11 +340,18 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\HttpResponse
      */
-    public function send($method, $url, $options): HttpResponse
+    public function send(string $method, string $url, array $options): HttpResponse
     {
-        return new HttpResponse($this->buildClient()->request($method, $url, $this->mergeOptions([
-            'query' => $this->parseQueryParams($url),
-        ], $options)));
+        // If the first option is a string we probably have something like an XML-RPC payload.
+        if (is_string($body = head($options))) {
+            $request = new Request($method, $url, [], $body);
+        } else {
+            $request = new Request($method, $url, $this->mergeOptions([
+                'query' => $this->parseQueryParams($url),
+            ], $options));
+        }
+
+        return new HttpResponse($this->buildClient()->send($request));
     }
 
     /**
