@@ -10,6 +10,7 @@
     }],
     "require": {
         "php": "^7.0",
+        "illuminate/support": "5.4.* || 5.5.*",
         "guzzlehttp/guzzle": "^6.2"
     },
     "require-dev": {
