@@ -114,13 +114,13 @@ class HttpTest extends TestCase
     }
 
     /** @test */
-    function post_content_can_be_sent_as_multipart()
+    public function post_content_can_be_sent_as_multipart()
     {
         $response = Http::asMultipart()->post($this->url('/post'), [
             [
                 'name'     => 'foo',
                 'contents' => 'data',
-                'headers'  => ['Z-Baz' => 'bar']
+                'headers'  => ['Z-Baz' => 'bar'],
             ],
         ]);
 
