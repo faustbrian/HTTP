@@ -441,7 +441,7 @@ class PendingHttpRequest
     public function parseQueryParams(string $url): array
     {
         return tap([], function (&$query) use ($url) {
-            parse_str(parse_url($url, PHP_URL_QUERY), $query);
+            parse_str(parse_url($url, PHP_URL_QUERY) ?? '', $query);
         });
     }
 }
