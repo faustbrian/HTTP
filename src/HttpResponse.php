@@ -74,7 +74,7 @@ class HttpResponse
      */
     public function json(): ?array
     {
-        return json_decode($this->response->getBody(), true);
+        return json_decode($this->response->getBody()->getContents(), true);
     }
 
     /**
