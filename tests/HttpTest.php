@@ -121,7 +121,7 @@ class HttpTest extends TestCase
         $response = Http::asMultipart()->post($this->url('/multi-part'), [
             [
                 'name' => 'foo',
-                'contents' => 'bar'
+                'contents' => 'bar',
             ], [
                 'name' => 'baz',
                 'contents' => 'qux',
@@ -469,7 +469,7 @@ class HttpTest extends TestCase
             'baz' => 'qux',
         ]);
 
-    dd($response->testMacro());
+        dd($response->testMacro());
 
         $this->assertSame('bar qux', $response->testMacro());
     }
