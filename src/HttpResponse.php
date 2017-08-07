@@ -64,7 +64,7 @@ class HttpResponse
      */
     public function body(): ?string
     {
-        return $this->response->getBody();
+        return $this->response->getBody()->getContents();
     }
 
     /**

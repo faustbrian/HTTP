@@ -118,15 +118,24 @@ class HttpTest extends TestCase
     /** @test */
     public function post_content_can_be_sent_as_multipart()
     {
-        $response = Http::asMultipart()->post($this->url('/post'), [
+        $response = Http::asMultipart()->post($this->url('/multi-part'), [
             [
-                'name'     => 'foo',
-                'contents' => 'data',
-                'headers'  => ['Z-Baz' => 'bar'],
+                'name' => 'foo',
+                'contents' => 'bar'
+            ], [
+                'name' => 'baz',
+                'contents' => 'qux',
+            ], [
+                'name' => 'test-file',
+                'contents' => 'test contents',
+                'filename' => 'test-file.txt',
             ],
-        ]);
+        ])->json();
 
-        $this->assertTrue($response->isOk());
+        $this->assertEquals(['foo' => 'bar', 'baz' => 'qux'], $response['body_content']);
+        $this->assertTrue($response['has_file']);
+        $this->assertEquals($response['file_content'], 'test contents');
+        $this->assertStringStartsWith('multipart', $response['headers']['content-type'][0]);
     }
 
     /** @test */
@@ -450,16 +459,17 @@ class HttpTest extends TestCase
     public function response_can_use_macros()
     {
         HttpResponse::macro('testMacro', function () {
-            return vsprintf('%s %s', [
-                $this->json()['json']['foo'],
-                $this->json()['json']['baz'],
-            ]);
+            $body = $this->json()['json'];
+
+            return sprintf('%s %s', $body['foo'], $body['baz']);
         });
 
         $response = Http::post($this->url('/post'), [
             'foo' => 'bar',
             'baz' => 'qux',
         ]);
+
+    dd($response->testMacro());
 
         $this->assertSame('bar qux', $response->testMacro());
     }
