@@ -469,8 +469,6 @@ class HttpTest extends TestCase
             'baz' => 'qux',
         ]);
 
-        dd($response->testMacro());
-
         $this->assertSame('bar qux', $response->testMacro());
     }
 
