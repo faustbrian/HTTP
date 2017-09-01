@@ -479,6 +479,14 @@ class HttpTest extends TestCase
 
         $this->assertTrue($response->isSuccess());
     }
+
+    /** @test */
+    public function can_use_digest_auth()
+    {
+        $response = Http::withDigestAuth('username', 'password')->get($this->url('/auth/digest'));
+
+        $this->assertTrue($response->isSuccess());
+    }
 }
 
 class HttpServer
