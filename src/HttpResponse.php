@@ -175,4 +175,14 @@ class HttpResponse
     {
         return $this->status() >= 500;
     }
+
+    /**
+     * Convert the response to a string.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->body();
+    }
 }
