@@ -489,7 +489,7 @@ class HttpTest extends TestCase
     }
 
     /** @test */
-    function cookies_can_be_shared_between_requests()
+    public function cookies_can_be_shared_between_requests()
     {
         $response = Http::withCookies()->get($this->url('/cookies'));
         $this->assertEmpty($response->body());
