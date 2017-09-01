@@ -110,4 +110,14 @@ $app->post('/multi-part', function () {
     ], 200);
 });
 
+$app->post('/cookies', function() {
+   return response(null, 200)->withCookie(
+       new \Symfony\Component\HttpFoundation\Cookie('foo', 'bar')
+   );
+});
+
+$app->get('/cookies', function() {
+    return response(app('request')->cookies->get('foo'), 200);
+});
+
 $app->run();

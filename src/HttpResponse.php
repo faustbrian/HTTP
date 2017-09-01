@@ -86,7 +86,8 @@ class HttpResponse
     {
         return simplexml_load_string(
             utf8_encode($this->response->getBody()->getContents()),
-            'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS
+            'SimpleXMLElement',
+            LIBXML_NOCDATA | LIBXML_NOBLANKS
         );
     }
 

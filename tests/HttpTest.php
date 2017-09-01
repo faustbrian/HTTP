@@ -487,6 +487,21 @@ class HttpTest extends TestCase
 
         $this->assertTrue($response->isSuccess());
     }
+
+    /** @test */
+    function cookies_can_be_shared_between_requests()
+    {
+        $response = Http::withCookies()->get($this->url('/cookies'));
+        $this->assertEmpty($response->body());
+
+        Http::withCookies()->post($this->url('/cookies'));
+
+        $response = Http::withCookies()->get($this->url('/cookies'));
+        $this->assertEquals('bar', $response->body());
+
+        $response = Http::get($this->url('/cookies'));
+        $this->assertEmpty($response->body());
+    }
 }
 
 class HttpServer

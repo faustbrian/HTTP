@@ -17,6 +17,7 @@ use Closure;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Cookie\CookieJar;
 
 class PendingHttpRequest
 {
@@ -47,6 +48,13 @@ class PendingHttpRequest
      * @var \GuzzleHttp\HandlerStack
      */
     private $handler;
+
+    /**
+     * The Guzzle CookieJar.
+     *
+     * @var \GuzzleHttp\Cookie\CookieJar
+     */
+    private static $cookieJar;
 
     /**
      * Create a new PendingHttpRequest instance.
@@ -238,6 +246,30 @@ class PendingHttpRequest
                 'verify' => false,
             ]);
         });
+    }
+
+    /**
+     * Store any cookies in a cookie jar.
+     *
+     * @return \BrianFaust\Http\PendingHttpRequest
+     */
+    public function withCookies(): PendingHttpRequest
+    {
+        return tap($this, function ($request) {
+            return $this->options = array_merge_recursive($this->options, [
+                'cookies' => static::getCookieJar(),
+            ]);
+        });
+    }
+
+    /**
+     * Get an instance of a Guzzle cookie jar.
+     *
+     * @return \GuzzleHttp\Cookie\CookieJar
+     */
+    public static function getCookieJar(): CookieJar
+    {
+        return static::$cookieJar ?: static::$cookieJar = new CookieJar();
     }
 
     /**
