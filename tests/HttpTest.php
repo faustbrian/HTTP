@@ -507,7 +507,7 @@ class HttpTest extends TestCase
      * @test
      * @expectedException \BrianFaust\Http\Exceptions\ConnectionException
      */
-    function client_will_force_timeout()
+    public function client_will_force_timeout()
     {
         Http::timeout(1)->get($this->url('/timeout'));
     }
