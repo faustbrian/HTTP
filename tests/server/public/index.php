@@ -16,43 +16,43 @@ function build_response($request)
     ], $request->header('HTTP-Status', 200));
 }
 
-$app->get('/get', function () {
+$app->router->get('/get', function () {
     return build_response(app('request'));
 });
 
-$app->post('/post', function () {
+$app->router->post('/post', function () {
     return build_response(app('request'));
 });
 
-$app->put('/put', function () {
+$app->router->put('/put', function () {
     return build_response(app('request'));
 });
 
-$app->patch('/patch', function () {
+$app->router->patch('/patch', function () {
     return build_response(app('request'));
 });
 
-$app->delete('/delete', function () {
+$app->router->delete('/delete', function () {
     return build_response(app('request'));
 });
 
-$app->get('/redirect', function () {
+$app->router->get('/redirect', function () {
     return redirect('redirected');
 });
 
-$app->get('/redirected', function () {
+$app->router->get('/redirected', function () {
     return 'Redirected!';
 });
 
-$app->get('/raw', function () {
+$app->router->get('/raw', function () {
     return 'A simple string response';
 });
 
-$app->get('/xml', function () {
+$app->router->get('/xml', function () {
     return "<?xml version='1.0' encoding='UTF-8'?><http><name>John</name></http>";
 });
 
-$app->get('/auth/basic', function () use ($app) {
+$app->router->get('/auth/basic', function () use ($app) {
     $request = $app['request'];
 
     $headers = [
@@ -67,7 +67,7 @@ $app->get('/auth/basic', function () use ($app) {
 /*
  * Made by @bastien-phi.
  */
-$app->get('/auth/digest', function () {
+$app->router->get('/auth/digest', function () {
     $realm = 'Restricted area';
 
     $authorization = app('request')->server->get('PHP_AUTH_DIGEST');
@@ -101,7 +101,7 @@ $app->get('/auth/digest', function () {
     return response(200);
 });
 
-$app->post('/multi-part', function () {
+$app->router->post('/multi-part', function () {
     return response()->json([
         'body_content' => app('request')->only(['foo', 'baz']),
         'has_file' => app('request')->hasFile('test-file'),
@@ -110,13 +110,13 @@ $app->post('/multi-part', function () {
     ], 200);
 });
 
-$app->post('/cookies', function () {
+$app->router->post('/cookies', function () {
     return response(null, 200)->withCookie(
        new \Symfony\Component\HttpFoundation\Cookie('foo', 'bar')
    );
 });
 
-$app->get('/cookies', function () {
+$app->router->get('/cookies', function () {
     return response(app('request')->cookies->get('foo'), 200);
 });
 

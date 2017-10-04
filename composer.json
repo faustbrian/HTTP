@@ -15,7 +15,7 @@
     },
     "require-dev": {
         "coderabbi/phpumoji": "^0.7.0@beta",
-        "laravel/lumen-framework": "5.4.*",
+        "laravel/lumen-framework": "5.5.*",
         "phpunit/phpunit": "^6.1"
     },
     "autoload": {
