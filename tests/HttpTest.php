@@ -502,6 +502,15 @@ class HttpTest extends TestCase
         $response = Http::get($this->url('/cookies'));
         $this->assertEmpty($response->body());
     }
+
+    /**
+     * @test
+     * @expectedException \BrianFaust\Http\Exceptions\ConnectionException
+     */
+    function client_will_force_timeout()
+    {
+        Http::timeout(1)->get($this->url('/timeout'));
+    }
 }
 
 class HttpServer

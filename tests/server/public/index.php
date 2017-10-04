@@ -52,6 +52,10 @@ $app->router->get('/xml', function () {
     return "<?xml version='1.0' encoding='UTF-8'?><http><name>John</name></http>";
 });
 
+$app->router->get('/timeout', function () {
+    sleep(2);
+});
+
 $app->router->get('/auth/basic', function () use ($app) {
     $request = $app['request'];
 

@@ -287,6 +287,22 @@ class PendingHttpRequest
     }
 
     /**
+     * Timeout of the request in seconds.
+     *
+     * @param  int $seconds
+     *
+     * @return \BrianFaust\Http\PendingHttpRequest
+     */
+    public function timeout(int $seconds): PendingHttpRequest
+    {
+        return tap($this, function () use ($seconds) {
+            return $this->options = array_merge_recursive($this->options, [
+                'timeout' => $seconds,
+            ]);
+        });
+    }
+
+    /**
      * Set the pre-request Callback.
      *
      * @param \Closure $callback
@@ -386,9 +402,13 @@ class PendingHttpRequest
      */
     public function send(string $method, string $url, array $options): HttpResponse
     {
-        return new HttpResponse($this->buildClient()->request($method, $url, $this->mergeOptions([
-            'query' => $this->parseQueryParams($url),
-        ], $options)));
+        try {
+            return new HttpResponse($this->buildClient()->request($method, $url, $this->mergeOptions([
+                'query' => $this->parseQueryParams($url),
+            ], $options)));
+        } catch (\GuzzleHttp\Exception\ConnectException $e) {
+            throw new Exceptions\ConnectionException($e->getMessage(), 0, $e);
+        }
     }
 
     /**
