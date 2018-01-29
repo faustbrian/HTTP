@@ -9,14 +9,13 @@
         "homepage": "https://brianfaust.me"
     }],
     "require": {
-        "php": "^7.0",
-        "illuminate/support": "5.4.* || 5.5.*",
-        "guzzlehttp/guzzle": "^6.2"
+        "php": "^7.1",
+        "guzzlehttp/guzzle": "^6.3",
+        "illuminate/support": "5.4.* || 5.5.*"
     },
     "require-dev": {
-        "coderabbi/phpumoji": "^0.7.0@beta",
         "laravel/lumen-framework": "5.5.*",
-        "phpunit/phpunit": "^6.1"
+        "phpunit/phpunit": "^6.5"
     },
     "autoload": {
         "psr-4": {
