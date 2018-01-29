@@ -71,7 +71,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public static function new(...$args): PendingHttpRequest
+    public static function new(...$args): self
     {
         return new self(...$args);
     }
@@ -83,7 +83,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function bodyFormat(string $format): PendingHttpRequest
+    public function bodyFormat(string $format): self
     {
         return tap($this, function ($request) use ($format) {
             $this->bodyFormat = $format;
@@ -97,7 +97,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function contentType(string $contentType): PendingHttpRequest
+    public function contentType(string $contentType): self
     {
         return $this->withHeaders(['Content-Type' => $contentType]);
     }
@@ -109,7 +109,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function accept(string $header): PendingHttpRequest
+    public function accept(string $header): self
     {
         return $this->withHeaders(['Accept' => $header]);
     }
@@ -119,7 +119,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function asJson(): PendingHttpRequest
+    public function asJson(): self
     {
         return $this->bodyFormat('json')->contentType('application/json');
     }
@@ -129,7 +129,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function asFormParams(): PendingHttpRequest
+    public function asFormParams(): self
     {
         return $this->bodyFormat('form_params')->contentType('application/x-www-form-urlencoded');
     }
@@ -139,7 +139,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function asMultipart(): PendingHttpRequest
+    public function asMultipart(): self
     {
         return $this->bodyFormat('multipart');
     }
@@ -149,7 +149,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function asBody(): PendingHttpRequest
+    public function asBody(): self
     {
         return $this->bodyFormat('body');
     }
@@ -161,7 +161,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function withBaseUri(string $uri): PendingHttpRequest
+    public function withBaseUri(string $uri): self
     {
         return tap($this, function ($request) use ($uri) {
             return $this->options = array_merge_recursive($this->options, [
@@ -178,7 +178,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function withBasicAuth(string $username, string $password): PendingHttpRequest
+    public function withBasicAuth(string $username, string $password): self
     {
         return tap($this, function ($request) use ($username, $password) {
             return $this->options = array_merge_recursive($this->options, [
@@ -195,7 +195,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function withDigestAuth(string $username, string $password): PendingHttpRequest
+    public function withDigestAuth(string $username, string $password): self
     {
         return tap($this, function ($request) use ($username, $password) {
             return $this->options = array_merge_recursive($this->options, [
@@ -211,7 +211,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function withHeaders(array $headers): PendingHttpRequest
+    public function withHeaders(array $headers): self
     {
         return tap($this, function ($request) use ($headers) {
             return $this->options = array_merge_recursive($this->options, [
@@ -225,7 +225,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function withoutRedirecting(): PendingHttpRequest
+    public function withoutRedirecting(): self
     {
         return tap($this, function ($request) {
             return $this->options = array_merge_recursive($this->options, [
@@ -239,7 +239,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function withoutVerifying(): PendingHttpRequest
+    public function withoutVerifying(): self
     {
         return tap($this, function ($request) {
             return $this->options = array_merge_recursive($this->options, [
@@ -253,7 +253,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function withCookies(): PendingHttpRequest
+    public function withCookies(): self
     {
         return tap($this, function ($request) {
             return $this->options = array_merge_recursive($this->options, [
@@ -279,7 +279,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function withHandler($handler): PendingHttpRequest
+    public function withHandler($handler): self
     {
         return tap($this, function ($request) use ($handler) {
             return $this->handler = $handler;
@@ -293,7 +293,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function timeout(int $seconds): PendingHttpRequest
+    public function timeout(int $seconds): self
     {
         return tap($this, function () use ($seconds) {
             return $this->options = array_merge_recursive($this->options, [
@@ -309,7 +309,7 @@ class PendingHttpRequest
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
-    public function beforeSending(Closure $callback): PendingHttpRequest
+    public function beforeSending(Closure $callback): self
     {
         return tap($this, function () use ($callback) {
             $this->beforeSendingCallbacks[] = $callback;
