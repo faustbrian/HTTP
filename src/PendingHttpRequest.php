@@ -221,14 +221,14 @@ class PendingHttpRequest
             ]);
         });
     }
-    
+
     public function withOptions($options)
     {
         return tap($this, function ($request) use ($options) {
             return $this->options = array_merge_recursive($this->options, $options);
         });
     }
-    
+
     /**
      * Send headers with the request.
      *
