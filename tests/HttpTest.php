@@ -12,8 +12,8 @@ declare(strict_types=1);
  */
 
 use BrianFaust\Http\Http;
-use PHPUnit\Framework\TestCase;
 use BrianFaust\Http\HttpResponse;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversNothing
@@ -120,13 +120,13 @@ class HttpTest extends TestCase
     {
         $response = Http::asMultipart()->post($this->url('/multi-part'), [
             [
-                'name' => 'foo',
+                'name'     => 'foo',
                 'contents' => 'bar',
             ], [
-                'name' => 'baz',
+                'name'     => 'baz',
                 'contents' => 'qux',
             ], [
-                'name' => 'test-file',
+                'name'     => 'test-file',
                 'contents' => 'test contents',
                 'filename' => 'test-file.txt',
             ],

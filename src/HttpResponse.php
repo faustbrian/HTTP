@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace BrianFaust\Http;
 
-use SimpleXMLElement;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Traits\Macroable;
+use SimpleXMLElement;
 
 class HttpResponse
 {

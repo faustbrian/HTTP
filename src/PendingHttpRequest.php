@@ -15,9 +15,9 @@ namespace BrianFaust\Http;
 
 use Closure;
 use GuzzleHttp\Client;
+use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Cookie\CookieJar;
 
 class PendingHttpRequest
 {
@@ -314,7 +314,7 @@ class PendingHttpRequest
     /**
      * Timeout of the request in seconds.
      *
-     * @param  int $seconds
+     * @param int $seconds
      *
      * @return \BrianFaust\Http\PendingHttpRequest
      */
@@ -455,7 +455,7 @@ class PendingHttpRequest
     {
         static $handler;
 
-        if (! $handler) {
+        if (!$handler) {
             $handler = $this->handler ?? \GuzzleHttp\choose_handler();
         }
 
